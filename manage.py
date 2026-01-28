@@ -5,7 +5,7 @@ import sys
 def main():
     """Run administrative tasks."""
     # Cette ligne doit avoir exactement 4 espaces au début
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MonProjectDjango.settings')
+   os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MonProjectDjango.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
