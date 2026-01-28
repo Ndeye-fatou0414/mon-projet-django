@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 import cloudinary
+import dj_database_url
 
 # ==================================================
 # BASE
@@ -12,8 +13,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SÉCURITÉ
 # ==================================================
 SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-for-dev-only")
-DEBUG = False
-ALLOWED_HOSTS = ["mon-projet-django-b8xs.onrender.com"]
+DEBUG = os.environ.get("DEBUG", "False") == "True"  # Changé pour pouvoir activer DEBUG facilement
+
+# Permettre localhost pour les tests
+ALLOWED_HOSTS = [
+    "mon-projet-django-b8xs.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 # ==================================================
 # APPLICATIONS
@@ -79,14 +86,24 @@ TEMPLATES = [
 ]
 
 # ==================================================
-# DATABASE (SQLite temporaire)
+# DATABASE
 # ==================================================
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# Utiliser PostgreSQL sur Render, SQLite en local
+if os.environ.get('DATABASE_URL'):
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=os.environ.get('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # ==================================================
 # AUTH
@@ -130,22 +147,23 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # ==================================================
-# CLOUDINARY
+# CLOUDINARY (seulement si configuré)
 # ==================================================
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-    'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-}
+if os.environ.get('CLOUDINARY_CLOUD_NAME'):
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    }
 
-cloudinary.config(
-    cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
-    api_key=os.environ.get('CLOUDINARY_API_KEY'),
-    api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
-    secure=True,
-)
+    cloudinary.config(
+        cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        api_key=os.environ.get('CLOUDINARY_API_KEY'),
+        api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
+        secure=True,
+    )
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # ==================================================
 # INTERNATIONALISATION
