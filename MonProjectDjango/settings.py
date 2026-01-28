@@ -16,12 +16,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-for-dev-only")
 DEBUG = os.environ.get("DEBUG", "False") == "True"  # Changé pour pouvoir activer DEBUG facilement
 
 # Permettre localhost pour les tests
-ALLOWED_HOSTS = [
-    "mon-projet-django-b8xs.onrender.com",
-    "localhost",
-    "127.0.0.1"
-]
-
+ALLOWED_HOSTS = ['mon-projet-django.onrender.com', 'localhost', '127.0.0.1']
+# Ou pour tester rapidement :
+ALLOWED_HOSTS = ['*']
 # ==================================================
 # APPLICATIONS
 # ==================================================
