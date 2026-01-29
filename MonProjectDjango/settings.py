@@ -106,14 +106,20 @@ AUTHENTICATION_BACKENDS = [
 # ==================================================
 # REST FRAMEWORK & JWT
 # ==================================================
+# ==================================================
+# REST FRAMEWORK & JWT
+# ==================================================
+
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
 }
+
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -144,9 +150,9 @@ if os.environ.get('CLOUDINARY_CLOUD_NAME'):
         secure=True,
     )
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    'DEFAULT_PERMISSION_CLASSES': (
-    'rest_framework.permissions.IsAuthenticated',
-),
+    # 'DEFAULT_PERMISSION_CLASSES': (
+#    / # 'rest_framework.permissions.IsAuthenticated',
+# ),
 
 # ==================================================
 # INTERNATIONALISATION
