@@ -12,34 +12,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==================================================
 # SÉCURITÉ
 # ==================================================
-SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret-for-dev-only")
-DEBUG = os.environ.get("DEBUG", "False") == "True"  # Changé pour pouvoir activer DEBUG facilement
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-local-dev-key-12345")
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-# Permettre localhost pour les tests
-ALLOWED_HOSTS = ['mon-projet-django.onrender.com', 'localhost', '127.0.0.1']
-# Ou pour tester rapidement :
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['mon-projet-django-b8xs.onrender.com', 'localhost', '127.0.0.1', '.onrender.com']
+
 # ==================================================
 # APPLICATIONS
 # ==================================================
 INSTALLED_APPS = [
+    'cloudinary_storage',
+    'cloudinary',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # Apps locales
-    'accounts',
-
-    # Tiers
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-    'cloudinary',
-    'cloudinary_storage',
+    'accounts',
 ]
 
 # ==================================================
@@ -57,19 +51,15 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# ==================================================
-# URL / WSGI
-# ==================================================
 ROOT_URLCONF = 'MonProjectDjango.urls'
-WSGI_APPLICATION = 'MonProjectDjango.wsgi.application'
 
 # ==================================================
-# TEMPLATES
+# TEMPLATES (C'est ce qui manquait !)
 # ==================================================
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -82,10 +72,11 @@ TEMPLATES = [
     },
 ]
 
+WSGI_APPLICATION = 'MonProjectDjango.wsgi.application'
+
 # ==================================================
-# DATABASE
+# BASE DE DONNÉES
 # ==================================================
-# Utiliser PostgreSQL sur Render, SQLite en local
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
         'default': dj_database_url.config(
@@ -103,7 +94,7 @@ else:
     }
 
 # ==================================================
-# AUTH
+# AUTHENTIFICATION
 # ==================================================
 AUTH_USER_MODEL = 'accounts.User'
 
@@ -113,7 +104,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # ==================================================
-# REST & JWT
+# REST FRAMEWORK & JWT
 # ==================================================
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -130,43 +121,28 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
-# ==================================================
-# CORS
-# ==================================================
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 # ==================================================
-# STATIC FILES
+# FICHIERS STATIQUES & MEDIA (CLOUDINARY)
 # ==================================================
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-INSTALLED_APPS = [
-    # ...
-    'cloudinary_storage',  # Doit être AVANT cloudinary
-    'cloudinary',
-    'accounts',
-    # ...
-]
 
-# ==================================================
-# CLOUDINARY (seulement si configuré)
-# ==================================================
 if os.environ.get('CLOUDINARY_CLOUD_NAME'):
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
         'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
         'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
     }
-
     cloudinary.config(
         cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
         api_key=os.environ.get('CLOUDINARY_API_KEY'),
         api_secret=os.environ.get('CLOUDINARY_API_SECRET'),
         secure=True,
     )
-
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # ==================================================
@@ -176,12 +152,8 @@ LANGUAGE_CODE = 'fr-fr'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# ==================================================
-# SÉCURITÉ PROD
-# ==================================================
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
