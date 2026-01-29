@@ -142,6 +142,13 @@ CORS_ALLOW_CREDENTIALS = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+INSTALLED_APPS = [
+    # ...
+    'cloudinary_storage',  # Doit être AVANT cloudinary
+    'cloudinary',
+    'accounts',
+    # ...
+]
 
 # ==================================================
 # CLOUDINARY (seulement si configuré)
