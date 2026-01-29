@@ -54,7 +54,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'MonProjectDjango.urls'
 
 # ==================================================
-# TEMPLATES (C'est ce qui manquait !)
+# TEMPLATES
 # ==================================================
 TEMPLATES = [
     {
@@ -75,7 +75,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'MonProjectDjango.wsgi.application'
 
 # ==================================================
-# BASE DE DONNÉES
+# BASE DE DONNÉES (POSTGRES SUR RENDER / SQLITE LOCAL)
 # ==================================================
 if os.environ.get('DATABASE_URL'):
     DATABASES = {
@@ -106,20 +106,16 @@ AUTHENTICATION_BACKENDS = [
 # ==================================================
 # REST FRAMEWORK & JWT
 # ==================================================
-# ==================================================
-# REST FRAMEWORK & JWT
-# ==================================================
-
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        # Par défaut, on demande d'être connecté. 
+        # Note: Tu peux surcharger cela dans tes vues avec AllowAny.
+        'rest_framework.permissions.IsAuthenticated',
+    ),
 }
-
-
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
@@ -137,11 +133,12 @@ STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# CORRECTION CLOUDINARY : On récupère les clés via os.environ.get('NOM_DE_LA_VAR')
 if os.environ.get('CLOUDINARY_CLOUD_NAME'):
     CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.environ.get('dybfqqqr6'),
-        'API_KEY': os.environ.get('575168651561411'),
-        'API_SECRET': os.environ.get('dU-TLA7YUeBKKsSjG795Ouv1vP8'),
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
     }
     cloudinary.config(
         cloud_name=os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -150,9 +147,6 @@ if os.environ.get('CLOUDINARY_CLOUD_NAME'):
         secure=True,
     )
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    # 'DEFAULT_PERMISSION_CLASSES': (
-#    / # 'rest_framework.permissions.IsAuthenticated',
-# ),
 
 # ==================================================
 # INTERNATIONALISATION
@@ -163,9 +157,11 @@ USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# ==================================================
+# SÉCURITÉ PRODUCTION
+# ==================================================
 if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
-    
