@@ -144,6 +144,9 @@ if os.environ.get('CLOUDINARY_CLOUD_NAME'):
         secure=True,
     )
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    'DEFAULT_PERMISSION_CLASSES': (
+    'rest_framework.permissions.IsAuthenticated',
+),
 
 # ==================================================
 # INTERNATIONALISATION
@@ -159,3 +162,4 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
+    
