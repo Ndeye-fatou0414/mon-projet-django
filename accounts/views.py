@@ -104,7 +104,6 @@ class UpdateProfileView(APIView):
 
 # --- HOTELS ---
 class HotelViewSet(viewsets.ModelViewSet):
-    """CRUD complet pour les hôtels"""
     queryset = Hotel.objects.all()
     serializer_class = HotelSerializer
     permission_classes = [IsAuthenticated]

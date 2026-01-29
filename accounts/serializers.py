@@ -4,27 +4,22 @@ from .models import Hotel
 
 User = get_user_model()
 
-# 1. Gestion des hôtels
 class HotelSerializer(serializers.ModelSerializer):
-    # ✅ Retourne l'URL complète Cloudinary
     image = serializers.SerializerMethodField()
-    
+
     class Meta:
         model = Hotel
-        fields = ['id', 'name', 'address', 'email', 'phone', 'price', 'image', 'created_by', 'created_at', 'updated_at']
+        fields = [
+            'id', 'name', 'address', 'email', 'phone',
+            'price_per_night',   # 👈 ICI
+            'image', 'created_by',
+            'created_at', 'updated_at'
+        ]
         read_only_fields = ['created_by', 'created_at', 'updated_at']
-    
+
     def get_image(self, obj):
-        """Retourne l'URL complète Cloudinary ou None"""
-        if obj.image:
-            # CloudinaryField retourne automatiquement l'URL complète
-            return obj.image.url
-        return None
-    
-    def create(self, validated_data):
-        """Crée un hôtel avec l'utilisateur connecté"""
-        validated_data['created_by'] = self.context['request'].user
-        return super().create(validated_data)
+        return obj.image.url if obj.image else None
+
 
 
 # 2. Inscription utilisateur
