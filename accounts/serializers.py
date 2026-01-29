@@ -4,33 +4,38 @@ from .models import Hotel
 
 User = get_user_model()
 
+# --- SERIALIZER HOTEL ---
 class HotelSerializer(serializers.ModelSerializer):
-    image = serializers.SerializerMethodField()
-    # ✅ CORRECTION : Mapper price_per_night vers le champ price du modèle
+    # ✅ CORRECTION 1 : Mapper price_per_night vers le champ price du modèle
     price_per_night = serializers.DecimalField(
         source='price',
         max_digits=10,
         decimal_places=2
     )
+    # ✅ CORRECTION 2 : Champ séparé pour l'URL de l'image (lecture)
+    image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = Hotel
         fields = [
             'id', 'name', 'address', 'email', 'phone',
-            'price_per_night',   # 👈 Nom exposé dans l'API
-            'image', 'created_by',
+            'price_per_night',   # ✅ Nom exposé dans l'API (écriture)
+            'image',             # ✅ Champ pour l'upload (écriture)
+            'image_url',         # ✅ Champ pour l'affichage (lecture seule)
+            'created_by',
             'created_at', 'updated_at'
         ]
-        read_only_fields = ['created_by', 'created_at', 'updated_at', 'image']
+        # ✅ IMPORTANT : Ne PAS mettre 'image' en read_only pour permettre l'upload
+        read_only_fields = ['created_by', 'created_at', 'updated_at', 'image_url']
 
-    def get_image(self, obj):
+    def get_image_url(self, obj):
         """Retourne l'URL Cloudinary de l'image ou None"""
         if obj.image:
             return obj.image.url
         return None
 
 
-# 2. Inscription utilisateur
+# --- SERIALIZER INSCRIPTION ---
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, min_length=8)
 
@@ -53,7 +58,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         return user
 
 
-# 3. Profil utilisateur
+# --- SERIALIZER PROFIL UTILISATEUR ---
 class UserSerializer(serializers.ModelSerializer):
     # ✅ Retourne l'URL complète Cloudinary pour l'avatar
     avatar = serializers.SerializerMethodField()
