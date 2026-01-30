@@ -44,35 +44,28 @@ class RegisterView(generics.CreateAPIView):
 
 
 # --- CONNEXION (email OU username) ---
+# accounts/views.py
+
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
-    username_field = 'email'
-    
     def validate(self, attrs):
-        # ✅ Récupérer l'identifiant (peut être email ou username)
-        credentials = {
-            'username': attrs.get("email"),
-            'password': attrs.get("password")
-        }
-        
-        # ✅ Authentifier avec le backend personnalisé
-        user = authenticate(**credentials)
-        
+        # On récupère 'email' envoyé par ton React
+        email = attrs.get("email")
+        password = attrs.get("password")
+
+        if email and password:
+            # Django va chercher l'utilisateur avec cet email
+            user = authenticate(username=email, password=password)
+        else:
+            raise serializers.ValidationError("L'email et le mot de passe sont requis.")
+
         if not user:
-            raise serializers.ValidationError({
-                "non_field_errors": ["Identifiant ou mot de passe incorrect."]
-            })
-        
-        # ✅ Générer les tokens manuellement
+            raise serializers.ValidationError("Identifiants incorrects (Email ou Mot de passe).")
+
         refresh = RefreshToken.for_user(user)
-        
         return {
             'refresh': str(refresh),
             'access': str(refresh.access_token),
         }
-
-
-class CustomTokenObtainPairView(TokenObtainPairView):
-    serializer_class = CustomTokenObtainPairSerializer
 
 # --- DECONNEXION ---
 class LogoutView(APIView):

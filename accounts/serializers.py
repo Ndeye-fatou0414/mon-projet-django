@@ -1,5 +1,7 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate # Ajout authenticate
 from rest_framework import serializers
+from rest_framework_simplejwt.tokens import RefreshToken # Ajout RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer # Ajout
 from .models import Hotel
 
 User = get_user_model()
@@ -64,3 +66,27 @@ class UserSerializer(serializers.ModelSerializer):
         if obj.avatar:
             return obj.avatar.url
         return None
+
+# --- SERIALIZER CONNEXION (JWT) ---
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    email = serializers.EmailField(write_only=True)
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        email = attrs.get("email")
+        password = attrs.get("password")
+
+        if not email or not password:
+            raise serializers.ValidationError("L'email et le mot de passe sont requis.")
+
+        # Authentification par email
+        user = authenticate(username=email, password=password)
+
+        if not user:
+            raise serializers.ValidationError("Identifiants incorrects (Email ou Mot de passe).")
+
+        refresh = RefreshToken.for_user(user)
+        return {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+        }
