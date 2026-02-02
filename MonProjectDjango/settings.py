@@ -29,10 +29,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # --- AUTHENTIFICATION ---
     'rest_framework',
+    'rest_framework.authtoken',  # 👈 Requis par Djoser
+    'djoser',                    # 👈 Ajoute Djoser ici
     'corsheaders',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    # --- TON APP ---
     'accounts',
 ]
 
@@ -125,6 +129,16 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+DJOSER = {
+    'LOGIN_FIELD': 'email',  # Utilise l'email pour le login
+    'USER_CREATE_PASSWORD_RETYPE': True, # Demande confirmation mot de passe
+    'SERIALIZERS': {
+        'user_create': 'accounts.serializers.RegisterSerializer',
+        'user': 'accounts.serializers.UserSerializer',
+        'current_user': 'accounts.serializers.UserSerializer',
+    },
+}
 
 # ==================================================
 # FICHIERS STATIQUES & MEDIA (CLOUDINARY)
