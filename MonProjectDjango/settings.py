@@ -130,9 +130,13 @@ SIMPLE_JWT = {
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
+# settings.py
+
 DJOSER = {
-    'LOGIN_FIELD': 'email',  # Utilise l'email pour le login
-    'USER_CREATE_PASSWORD_RETYPE': True, # Demande confirmation mot de passe
+    'LOGIN_FIELD': 'email',
+    'USER_CREATE_PASSWORD_RETYPE': True,
+    'SEND_ACTIVATION_EMAIL': True,           # 👈 Active l'envoi de l'email
+    'ACTIVATION_URL': 'activate/{uid}/{token}', # 👈 L'URL dans ton React (ex: localhost:3000/activate/...)
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.RegisterSerializer',
         'user': 'accounts.serializers.UserSerializer',
@@ -179,3 +183,14 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
+
+# ==================================================
+# CONFIGURATION EMAIL (DOIT ÊTRE HORS DU BLOC IF)
+# ==================================================
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')  # Ton adresse gmail
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')  # Ton mot de passe d'application
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
