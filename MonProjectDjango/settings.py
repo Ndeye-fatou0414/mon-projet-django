@@ -135,15 +135,16 @@ CORS_ALLOW_CREDENTIALS = True
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
-    'SEND_ACTIVATION_EMAIL': True,           # 👈 Active l'envoi de l'email
-    'ACTIVATION_URL': 'activate/{uid}/{token}', # 👈 L'URL dans ton React (ex: localhost:3000/activate/...)
+    'SEND_ACTIVATION_EMAIL': True,
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'DOMAIN': 'red-product-frontend-a1r8.vercel.app', # 👈 Ton domaine Vercel
+    'SITE_NAME': 'Red Product',
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.RegisterSerializer',
         'user': 'accounts.serializers.UserSerializer',
         'current_user': 'accounts.serializers.UserSerializer',
     },
 }
-
 # ==================================================
 # FICHIERS STATIQUES & MEDIA (CLOUDINARY)
 # ==================================================
@@ -184,3 +185,18 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
     
+    # ==================================================
+# CONFIGURATION EMAIL (GMAIL)
+# ==================================================
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://mon-projet-django-b8xs.onrender.com',
+    'https://red-product-frontend-a1r8.vercel.app'
+]
