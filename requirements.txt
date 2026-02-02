@@ -8,6 +8,7 @@ django-cloudinary-storage==0.3.0
 django-cors-headers==4.9.0
 djangorestframework==3.16.1
 djangorestframework_simplejwt==5.5.1
+djoser  # <--- Ta nouvelle ligne
 gunicorn==23.0.0
 idna==3.11
 packaging==25.0
