@@ -175,7 +175,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 # ==================================================
 # SÉCURITÉ PRODUCTION
 # ==================================================
@@ -184,19 +183,23 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
-    
-    # ==================================================
-# CONFIGURATION EMAIL (GMAIL)
-# ==================================================
-# settings.py
 
+# ==================================================
+# CONFIGURATION EMAIL (BREVO) - Sorti du bloc IF
+# ==================================================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp-relay.brevo.com' # 👈 Serveur Brevo
+EMAIL_HOST = 'smtp-relay.brevo.com' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER') # Ton e-mail de compte Brevo
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS') # Ta CLÉ SMTP Brevo
-DEFAULT_FROM_EMAIL = 'ton-email@tondomaine.com'
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER') 
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS') 
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER') # Utilise ton email Brevo ici
+
+# ==================================================
+# CORS & CSRF TRUSTED ORIGINS - Sorti du bloc IF
+# ==================================================
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
     'https://mon-projet-django-b8xs.onrender.com',
