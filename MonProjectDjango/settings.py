@@ -393,7 +393,7 @@ if not DEBUG:
 # ==================================================
 # CONFIGURATION EMAIL (BREVO) - CORRECTION RÉELLE
 # ==================================================
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # 👈 Changé pour envoyer vraiment
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 👈 Changé pour envoyer vraiment
 EMAIL_HOST = 'smtp-relay.brevo.com' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
