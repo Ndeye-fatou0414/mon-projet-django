@@ -342,6 +342,7 @@ DJOSER = {
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': 'activate/{uid}/{token}',
+    # C'EST CETTE LIGNE CI-DESSOUS QUI DOIT ÊTRE CORRIGÉE :
     'DOMAIN': 'red-product-frontend-a1r8.vercel.app', 
     'SITE_NAME': 'Red Product',
     'SERIALIZERS': {
