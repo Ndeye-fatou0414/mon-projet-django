@@ -187,7 +187,8 @@ if not DEBUG:
 # ==================================================
 # CONFIGURATION EMAIL (BREVO) - Sorti du bloc IF
 # ==================================================
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# Dans settings.py
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp-relay.brevo.com' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
