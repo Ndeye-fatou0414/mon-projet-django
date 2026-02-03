@@ -188,13 +188,15 @@ if not DEBUG:
     # ==================================================
 # CONFIGURATION EMAIL (GMAIL)
 # ==================================================
+# settings.py
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp-relay.brevo.com' # 👈 Serveur Brevo
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER') # Ton e-mail de compte Brevo
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS') # Ta CLÉ SMTP Brevo
+DEFAULT_FROM_EMAIL = 'ton-email@tondomaine.com'
 
 CSRF_TRUSTED_ORIGINS = [
     'https://mon-projet-django-b8xs.onrender.com',
