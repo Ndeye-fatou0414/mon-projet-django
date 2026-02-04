@@ -410,6 +410,5 @@ CORS_ALLOW_CREDENTIALS = True
 APPEND_SLASH = False # 👈 Ajouté pour éviter les erreurs de redirection API
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://mon-projet-django-b8xs.onrender.com',
     'https://red-product-frontend-a1r8.vercel.app'
 ]
