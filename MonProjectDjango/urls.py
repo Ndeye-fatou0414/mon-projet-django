@@ -3,29 +3,36 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework.routers import DefaultRouter
-from accounts.views import HotelViewSet # On garde uniquement la vue des Hôtels
 
-# 1. Configuration du Router pour les Hôtels
+from accounts.views import HotelViewSet
+
+# ==================================================
+# ROUTER API
+# ==================================================
 router = DefaultRouter()
-router.register(r'hotels', HotelViewSet, basename='hotel')
+router.register(r"hotels", HotelViewSet, basename="hotel")
 
-# 2. Définition des URLS
+# ==================================================
+# URLS
+# ==================================================
 urlpatterns = [
-    # Administration Django
-    path('admin/', admin.site.urls),
-    
-    # ==========================================================
-    # 🔑 AUTHENTIFICATION (DJOSER & JWT) - SEULE SECTION MODIFIÉE
-    # ==========================================================
-    # Remplace RegisterView, CustomTokenObtainPairView, etc.
-    path('auth/', include('djoser.urls')),      # Inscription, Profil, Mot de passe
-    path('auth/', include('djoser.urls.jwt')),  # Login, Refresh, Verify
-    # ==========================================================
+    # Admin
+    path("admin/", admin.site.urls),
 
-    # Toutes les routes CRUD des hôtels
-    path('api/', include(router.urls)),
+    # ==================================================
+    # AUTHENTIFICATION (DJOSER + JWT)
+    # ==================================================
+    path("auth/", include("djoser.urls")),        # register, activation, reset
+    path("auth/", include("djoser.urls.jwt")),    # login, refresh, verify
+
+    # ==================================================
+    # API
+    # ==================================================
+    path("api/", include(router.urls)),
 ]
 
-# 3. Gestion des fichiers médias
+# ==================================================
+# MEDIA (DEV)
+# ==================================================
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
