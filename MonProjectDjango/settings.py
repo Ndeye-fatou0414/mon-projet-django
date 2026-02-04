@@ -206,7 +206,6 @@
 #     'https://mon-projet-django-b8xs.onrender.com',
 #     'https://red-product-frontend-a1r8.vercel.app'
 # ]
-
 import os
 from pathlib import Path
 from datetime import timedelta
@@ -335,16 +334,21 @@ SIMPLE_JWT = {
 }
 
 # ==================================================
-# DJOSER (CORRECTION URL D'ACTIVATION)
+# DJOSER (✅ CORRECTION COMPLÈTE)
 # ==================================================
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    # C'EST CETTE LIGNE CI-DESSOUS QUI DOIT ÊTRE CORRIGÉE :
+    
+    # ✅ CORRECTION 1 : Ajouter PROTOCOL
+    'PROTOCOL': 'https',
+    
+    # ✅ CORRECTION 2 : URL du frontend (sans https://)
     'DOMAIN': 'red-product-frontend-a1r8.vercel.app', 
     'SITE_NAME': 'Red Product',
+    
     'SERIALIZERS': {
         'user_create': 'accounts.serializers.RegisterSerializer',
         'user': 'accounts.serializers.UserSerializer',
@@ -392,22 +396,23 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
 
 # ==================================================
-# CONFIGURATION EMAIL (BREVO) - CORRECTION RÉELLE
+# CONFIGURATION EMAIL (BREVO) - ✅ CORRECTION COMPLÈTE
 # ==================================================
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 👈 Changé pour envoyer vraiment
+# ✅ CORRECTION 3 : Utiliser SMTP au lieu de console
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'  # 👈 CHANGÉ ICI
 EMAIL_HOST = 'smtp-relay.brevo.com' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.environ.get('EMAIL_USER') 
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS') 
-DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER') 
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')
 
 # ==================================================
 # CORS & CSRF TRUSTED ORIGINS
 # ==================================================
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-APPEND_SLASH = False # 👈 Ajouté pour éviter les erreurs de redirection API
+APPEND_SLASH = False
 
 CSRF_TRUSTED_ORIGINS = [
     'https://mon-projet-django-b8xs.onrender.com',
