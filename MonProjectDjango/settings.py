@@ -218,6 +218,10 @@ import dj_database_url
 # ==================================================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Indispensable pour que Django reconnaisse le domaine Vercel sur Render
+USE_X_FORWARDED_HOST = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 # ==================================================
 # SÉCURITÉ
 # ==================================================
@@ -335,14 +339,13 @@ SIMPLE_JWT = {
 }
 
 # ==================================================
-# DJOSER (CORRECTION URL D'ACTIVATION)
+# DJOSER
 # ==================================================
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
     'SEND_ACTIVATION_EMAIL': True,
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    # C'EST CETTE LIGNE CI-DESSOUS QUI DOIT ÊTRE CORRIGÉE :
     'DOMAIN': 'red-product-frontend-a1r8.vercel.app', 
     'SITE_NAME': 'Red Product',
     'SERIALIZERS': {
@@ -392,9 +395,9 @@ if not DEBUG:
     X_FRAME_OPTIONS = 'DENY'
 
 # ==================================================
-# CONFIGURATION EMAIL (BREVO) - CORRECTION RÉELLE
+# CONFIGURATION EMAIL (BREVO) - RÉELLE ACTIVÉE
 # ==================================================
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' # 👈 Changé pour envoyer vraiment
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # Passé en SMTP
 EMAIL_HOST = 'smtp-relay.brevo.com' 
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -407,8 +410,9 @@ DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_USER')
 # ==================================================
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-APPEND_SLASH = False # 👈 Ajouté pour éviter les erreurs de redirection API
+APPEND_SLASH = False 
 
 CSRF_TRUSTED_ORIGINS = [
+    'https://mon-projet-django-b8xs.onrender.com',
     'https://red-product-frontend-a1r8.vercel.app'
 ]
